@@ -3,7 +3,7 @@ import React from 'react';
 import { action } from '@storybook/addon-actions';
 import { storiesOf } from '@storybook/react';
 
-import 'index.scss';
+import 'styles/index.scss';
 
 import Button from 'components/Button';
 

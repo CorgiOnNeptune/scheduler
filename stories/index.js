@@ -5,6 +5,7 @@ import { storiesOf } from '@storybook/react';
 
 import 'styles/index.scss';
 
+import Appointment from 'components/Appointment';
 import Button from 'components/Button';
 import DayList from 'components/DayList';
 import DayListItem from 'components/DayListItem';
@@ -127,3 +128,10 @@ storiesOf('InterviewerList', module)
       onChange={action('setInterviewer')}
     />
   ));
+
+storiesOf('Appointment', module)
+  .addParameters({
+    backgrounds: [{ name: 'white', value: '#fff', default: true }],
+  })
+  .add('Appointment', () => <Appointment />)
+  .add('Appointment w/ Time', () => <Appointment time="12pm" />);

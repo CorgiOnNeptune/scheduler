@@ -9,7 +9,7 @@ export default function InterviewerList(props) {
       <InterviewerListItem
         key={interviewer.id}
         selected={interviewer.id === props.interviewer}
-        setInterviewer={props.setInterviewer}
+        setInterviewer={(e) => props.setInterviewer(interviewer.id)}
         {...interviewer}
       />
     );
@@ -17,7 +17,7 @@ export default function InterviewerList(props) {
 
   return (
     <section className="interviewers">
-      <h4 className="interviewers__header text--semi-bold">Interviewer</h4>
+      <h4 className="interviewers__header text--semi-bold">Interviewers</h4>
       <ul className="interviewers__list">{interviewerItem}</ul>
     </section>
   );

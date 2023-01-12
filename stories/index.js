@@ -8,6 +8,7 @@ import 'styles/index.scss';
 import Appointment from 'components/Appointment';
 import Header from 'components/Appointment/Header';
 import Empty from 'components/Appointment/Empty';
+import Show from 'components/Appointment/Show';
 import Button from 'components/Button';
 import DayList from 'components/DayList';
 import DayListItem from 'components/DayListItem';
@@ -138,4 +139,12 @@ storiesOf('Appointment', module)
   .add('Appointment', () => <Appointment />)
   .add('Appointment w/ Time', () => <Appointment time="12pm" />)
   .add('Header', () => <Header time="12pm" />)
-  .add('Empty', () => <Empty onAdd={action('onAdd')} />);
+  .add('Empty', () => <Empty onAdd={action('onAdd')} />)
+  .add('Show', () => (
+    <Show
+      student="Lydia Miller-Jones"
+      interviewer={interviewer}
+      onEdit={action('onEdit')}
+      onDelete={action('onDelete')}
+    />
+  ));

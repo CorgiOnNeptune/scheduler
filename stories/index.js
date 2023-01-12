@@ -5,16 +5,18 @@ import { storiesOf } from '@storybook/react';
 
 import 'styles/index.scss';
 
-import Appointment from 'components/Appointment';
-import Header from 'components/Appointment/Header';
-import Empty from 'components/Appointment/Empty';
-import Show from 'components/Appointment/Show';
-import Confirm from 'components/Appointment/Confirm';
 import Button from 'components/Button';
 import DayList from 'components/DayList';
 import DayListItem from 'components/DayListItem';
 import InterviewerList from 'components/InterviewerList';
 import InterviewerListItem from 'components/InterviewerListItem';
+
+import Appointment from 'components/Appointment';
+import Header from 'components/Appointment/Header';
+import Empty from 'components/Appointment/Empty';
+import Show from 'components/Appointment/Show';
+import Confirm from 'components/Appointment/Confirm';
+import Status from 'components/Appointment/Status';
 
 storiesOf('Button', module)
   .addParameters({
@@ -155,4 +157,5 @@ storiesOf('Appointment', module)
       onConfirm={action('onConfirm')}
       onCancel={action('onCancel')}
     />
-  ));
+  ))
+  .add('Status', () => <Status message="Deleting" />);

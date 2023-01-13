@@ -4,6 +4,7 @@ import axios from 'axios';
 import 'styles/Application.scss';
 import DayList from './DayList';
 import Appointment from './Appointment';
+import { getAppointmentsForDay } from 'helpers/selectors';
 
 const appointments = {
   1: {
@@ -48,6 +49,7 @@ export default function Application(props) {
   const [day, setDay] = useState('Monday');
   const [days, setDays] = useState([]);
 
+  // Get days data from API and set the days state
   useEffect(() => {
     axios.get('http://localhost:8001/api/days').then((results) => {
       console.log('↓ /api/days ↓');

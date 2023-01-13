@@ -9,3 +9,18 @@ export function getAppointmentsForDay(state, day) {
 
   return filteredAppointments ?? [];
 }
+
+export function getInterview(state, interview) {
+  if (!interview) {
+    return null;
+  }
+  let result = {};
+
+  Object.values(state.interviewers).forEach((int) => {
+    if (int.id === interview.interviewer) {
+      result = { student: interview.student, interviewer: int };
+    }
+  });
+
+  return result ?? null;
+}

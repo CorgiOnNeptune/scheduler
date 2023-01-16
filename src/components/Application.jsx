@@ -18,6 +18,23 @@ export default function Application(props) {
   });
   const setDay = (day) => setState({ ...state, day });
 
+  const bookInterview = (id, interview) => {
+    console.log('bookInterview');
+    console.log(id, interview);
+
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview },
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+
+    setState({ ...state, appointments });
+  };
+
   // Get days data from API and set the days state
   useEffect(() => {
     Promise.all([
@@ -49,9 +66,11 @@ export default function Application(props) {
     return (
       <Appointment
         key={app.id}
-        {...app}
+        id={app.id}
+        time={app.time}
         interview={interview}
         interviewers={dailyInterviewers}
+        bookInterview={bookInterview}
       />
     );
   });

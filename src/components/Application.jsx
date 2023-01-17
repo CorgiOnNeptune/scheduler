@@ -38,6 +38,25 @@ export default function Application(props) {
       .catch((err) => err.message);
   };
 
+  const deleteInterview = (id) => {
+    console.log(`delete interview id: ${id}`);
+
+    const appointment = {
+      ...state.appointments[id],
+      interview: null,
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+
+    return axios
+      .delete(`http://localhost:8001/api/appointments/${id}`, appointments[id])
+      .then(setState({ ...state, appointments }))
+      .catch((err) => err.message);
+  };
+
   // Get days data from API and set the days state
   useEffect(() => {
     Promise.all([
@@ -76,6 +95,7 @@ export default function Application(props) {
         interview={interview}
         interviewers={dailyInterviewers}
         bookInterview={bookInterview}
+        deleteInterview={deleteInterview}
       />
     );
   });

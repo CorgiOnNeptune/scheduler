@@ -29,7 +29,7 @@ export default function useApplicationData() {
       .then(() => setState({ ...state, appointments }));
   };
 
-  async function deleteInterview(id) {
+  async function cancelInterview(id) {
     await axios.delete(`http://localhost:8001/api/appointments/${id}`);
     console.log(`delete interview id: ${id}`);
 
@@ -70,5 +70,5 @@ export default function useApplicationData() {
       .catch((err) => err.message);
   }, []);
 
-  return { state, setDay, bookInterview, deleteInterview };
+  return { state, setDay, bookInterview, cancelInterview };
 }

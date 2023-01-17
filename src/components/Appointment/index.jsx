@@ -8,13 +8,17 @@ import Empty from './Empty';
 import Form from './Form';
 import Status from './Status';
 import Confirm from './Confirm';
+import Error from './Error';
 
 const EMPTY = 'EMPTY';
 const SHOW = 'SHOW';
 const CREATE = 'CREATE';
 const SAVING = 'SAVING';
+const DELETING = 'DELETING';
 const CONFIRM = 'CONFIRM';
 const EDIT = 'EDIT';
+const ERROR_SAVE = 'ERROR_SAVE';
+const ERROR_DELETE = 'ERROR_DELETE';
 
 export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(
@@ -22,23 +26,26 @@ export default function Appointment(props) {
   );
 
   const save = (name, interviewer) => {
-    transition(SAVING);
-
     const interview = {
       student: name,
       interviewer,
     };
 
-    // Putting timeout here just to show saving animation because otherwise it is way too quick and it fully skips the transition
-    setTimeout(
-      () => props.bookInterview(props.id, interview) && transition(SHOW),
-      1000
-    );
+    transition(SAVING);
+
+    props
+      .bookInterview(props.id, interview)
+      .then(() => transition(SHOW))
+      .catch((error) => transition(ERROR_SAVE, true));
   };
 
   const deleteInterview = () => {
-    props.deleteInterview(props.id);
-    transition(EMPTY);
+    transition(DELETING, true);
+
+    props
+      .deleteInterview(props.id)
+      .then(() => transition(EMPTY))
+      .catch((error) => transition(ERROR_DELETE, true));
   };
 
   return (
@@ -76,6 +83,13 @@ export default function Appointment(props) {
           onConfirm={deleteInterview}
           onCancel={() => back()}
         />
+      )}
+      {mode === DELETING && <Status message="Deleting" />}
+      {mode === ERROR_SAVE && (
+        <Error onClose={() => back()} message="Could not save appointment." />
+      )}
+      {mode === ERROR_DELETE && (
+        <Error onClose={() => back()} message="Could not cancel appointment." />
       )}
     </article>
   );

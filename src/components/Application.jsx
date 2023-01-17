@@ -22,39 +22,41 @@ export default function Application(props) {
     console.log('bookInterview');
     console.log(id, interview);
 
-    const appointment = {
-      ...state.appointments[id],
-      interview: { ...interview },
-    };
-
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment,
-    };
-
     return axios
-      .put(`http://localhost:8001/api/appointments/${id}`, appointments[id])
-      .then(setState({ ...state, appointments }))
-      .catch((err) => err.message);
+      .put(`http://localhost:8001/api/appointments/${id}`)
+      .then(() => {
+        const appointment = {
+          ...state.appointments[id],
+          interview: { ...interview },
+        };
+
+        const appointments = {
+          ...state.appointments,
+          [id]: appointment,
+        };
+
+        setState({ ...state, appointments });
+      });
   };
 
   const deleteInterview = (id) => {
     console.log(`delete interview id: ${id}`);
 
-    const appointment = {
-      ...state.appointments[id],
-      interview: null,
-    };
-
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment,
-    };
-
     return axios
-      .delete(`http://localhost:8001/api/appointments/${id}`, appointments[id])
-      .then(setState({ ...state, appointments }))
-      .catch((err) => err.message);
+      .delete(`http://localhost:8001/api/appointments/${id}`)
+      .then(() => {
+        const appointment = {
+          ...state.appointments[id],
+          interview: null,
+        };
+
+        const appointments = {
+          ...state.appointments,
+          [id]: appointment,
+        };
+
+        setState({ ...state, appointments });
+      });
   };
 
   // Get days data from API and set the days state

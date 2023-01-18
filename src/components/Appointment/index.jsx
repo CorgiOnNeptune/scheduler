@@ -19,7 +19,6 @@ const CONFIRM = 'CONFIRM';
 const EDIT = 'EDIT';
 const ERROR_SAVE = 'ERROR_SAVE';
 const ERROR_DELETE = 'ERROR_DELETE';
-const ERROR_INVALID = 'ERROR_INVALID';
 
 export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(
@@ -91,12 +90,6 @@ export default function Appointment(props) {
       )}
       {mode === ERROR_DELETE && (
         <Error onClose={() => back()} message="Could not cancel appointment." />
-      )}
-      {mode === ERROR_INVALID && (
-        <Error
-          onClose={() => back()}
-          message="You must both enter your name and select an interviewer to make an appointment."
-        />
       )}
     </article>
   );

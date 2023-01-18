@@ -14,6 +14,7 @@ import {
   within,
   queryByText,
   queryByAltText,
+  waitForElementToBeRemoved,
 } from '@testing-library/react';
 
 import Application from 'components/Application';
@@ -32,7 +33,7 @@ describe('Application', () => {
   });
 
   it('loads data, books an interview and reduces the spots remaining for the first day by 1', async () => {
-    const { container, debug } = render(<Application />);
+    const { container } = render(<Application />);
     await waitForElement(() => getByText(container, 'Archie Cohen'));
 
     const appointment = getAllByTestId(container, 'appointment')[0];
@@ -187,6 +188,26 @@ describe('Application', () => {
     expect(getByText(container, 'Archie Cohen')).toBeInTheDocument();
 
     // Check that spots has not been altered by failed delete.
+    const day = getAllByTestId(container, 'day').find((day) =>
+      queryByText(day, 'Monday')
+    );
+    expect(getByText(day, /1 spot remaining/i)).toBeInTheDocument();
+  });
+
+  it('returns out of save form on press of the cancel button', async () => {
+    const { container } = render(<Application />);
+    await waitForElement(() => getByText(container, 'Archie Cohen'));
+
+    const appointment = getAllByTestId(container, 'appointment')[0];
+
+    fireEvent.click(getByAltText(appointment, /add/i));
+
+    fireEvent.click(getByText(appointment, /cancel/i));
+
+    // Check appointment is still empty
+    expect(getByAltText(appointment, /add/i)).toBeInTheDocument();
+
+    // Check spots was unaltered
     const day = getAllByTestId(container, 'day').find((day) =>
       queryByText(day, 'Monday')
     );

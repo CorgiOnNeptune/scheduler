@@ -11,10 +11,8 @@ import {
   getAllByTestId,
   getByAltText,
   getByPlaceholderText,
-  within,
   queryByText,
   queryByAltText,
-  waitForElementToBeRemoved,
 } from '@testing-library/react';
 
 import Application from 'components/Application';

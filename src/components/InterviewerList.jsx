@@ -5,7 +5,9 @@ import 'styles/InterviewerList.scss';
 import InterviewerListItem from './InterviewerListItem';
 
 const InterviewerList = (props) => {
-  const interviewerItem = props.interviewers.map((interviewer) => {
+  const interviewers = props.interviewers || [];
+
+  const interviewerItem = interviewers.map((interviewer) => {
     return (
       <InterviewerListItem
         key={interviewer.id}

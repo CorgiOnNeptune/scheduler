@@ -12,6 +12,7 @@ import {
   getByPlaceholderText,
   within,
   queryByText,
+  queryByAltText,
 } from '@testing-library/react';
 
 import Application from 'components/Application';
@@ -56,5 +57,33 @@ describe('Application', () => {
     );
 
     expect(getByText(day, /no spots remaining/i)).toBeInTheDocument();
+  });
+
+  it('loads data, cancels an interview and increases the spots remaining for Monday by 1', async () => {
+    const { container, debug } = render(<Application />);
+
+    await waitForElement(() => getByText(container, 'Archie Cohen'));
+
+    const appointment = getAllByTestId(container, 'appointment').find(
+      (appointment) => queryByText(appointment, 'Archie Cohen')
+    );
+    fireEvent.click(queryByAltText(appointment, 'Delete'));
+
+    // Check that the confirmation message is shown.
+    expect(
+      getByText(appointment, 'Are you sure you would like to delete?')
+    ).toBeInTheDocument();
+
+    fireEvent.click(queryByText(appointment, 'Confirm'));
+
+    expect(getByText(appointment, 'Deleting')).toBeInTheDocument();
+
+    // Wait until the element with the 'Add' button is displayed
+    await waitForElement(() => getByAltText(appointment, /add/i));
+
+    const day = getAllByTestId(container, 'day').find((day) =>
+      queryByText(day, 'Monday')
+    );
+    expect(getByText(day, /2 spots remaining/i)).toBeInTheDocument();
   });
 });

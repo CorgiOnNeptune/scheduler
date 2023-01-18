@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 import {
   cleanup,
@@ -85,5 +86,35 @@ describe('Application', () => {
       queryByText(day, 'Monday')
     );
     expect(getByText(day, /2 spots remaining/i)).toBeInTheDocument();
+  });
+
+  it('loads data, edits an interview and keep the spots remaining for Monday the same', async () => {
+    const { container } = render(<Application />);
+
+    await waitForElement(() => getByText(container, 'Archie Cohen'));
+    const appointment = getAllByTestId(container, 'appointment').find(
+      (appointment) => queryByText(appointment, 'Archie Cohen')
+    );
+
+    fireEvent.click(queryByAltText(appointment, 'Edit'));
+
+    // Change student name value to 'Lydia Miller-Jones'.
+    fireEvent.change(getByPlaceholderText(appointment, /enter student name/i), {
+      target: { value: 'Lydia Miller-Jones' },
+    });
+
+    // Click the second interviewer in the list.
+    fireEvent.click(getByAltText(appointment, 'Tori Malcolm'));
+
+    fireEvent.click(getByText(appointment, 'Save'));
+    expect(getByText(appointment, 'Saving')).toBeInTheDocument();
+
+    // Wait for edited appointment with new student name to appear
+    await waitForElement(() => getByText(appointment, 'Lydia Miller-Jones'));
+
+    const day = getAllByTestId(container, 'day').find((day) =>
+      queryByText(day, 'Monday')
+    );
+    expect(getByText(day, /1 spot remaining/i)).toBeInTheDocument();
   });
 });

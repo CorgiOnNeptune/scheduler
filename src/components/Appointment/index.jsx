@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './styles.scss';
+import 'styles/Appointment.scss';
 import useVisualMode from 'hooks/useVisualMode';
 import Header from './Header';
 import Show from './Show';
@@ -10,6 +10,7 @@ import Status from './Status';
 import Confirm from './Confirm';
 import Error from './Error';
 
+// Modes
 const EMPTY = 'EMPTY';
 const SHOW = 'SHOW';
 const CREATE = 'CREATE';
@@ -33,6 +34,7 @@ export default function Appointment(props) {
 
     transition(SAVING);
 
+    // Reference `editInterview()` in 'hooks/useApplicationData.js' for params
     props
       .editInterview(props.id, interview)
       .then(() => transition(SHOW))

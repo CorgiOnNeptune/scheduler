@@ -1,16 +1,46 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useReducer } from 'react';
 import axios from 'axios';
 
+const reducer = (state, action) => {
+  const { type, day, days, appointments, interviewers } = action;
+
+  switch (type) {
+    case 'SET_DAY':
+      return {
+        ...state,
+        day,
+      };
+
+    case 'SET_APPLICATION_DATA':
+      return {
+        ...state,
+        days,
+        appointments,
+        interviewers,
+      };
+
+    case 'SET_INTERVIEW':
+      return {
+        ...state,
+        appointments,
+        days,
+      };
+
+    default:
+      throw new Error(`Tried to reduce with unsupported action type: ${type}.`);
+  }
+};
+
 export default function useApplicationData() {
-  const [state, setState] = useState({
+  const [state, dispatch] = useReducer(reducer, {
     day: 'Monday',
     days: [],
     appointments: {},
   });
 
-  const setDay = (day) => setState({ ...state, day });
+  const setDay = (day) => dispatch({ type: 'SET_DAY', day });
 
-  // Get days data from API and set the days state
+  // Get all state data from API and dispatch to reducer
   useEffect(() => {
     Promise.all([
       axios.get('http://localhost:8001/api/days'),
@@ -18,22 +48,17 @@ export default function useApplicationData() {
       axios.get('http://localhost:8001/api/interviewers'),
     ])
       .then((all) => {
-        // console.log('↓ /api/days ↓');
-        // console.log(all[0].data);
-        // console.log('↓ /api/appointments ↓');
-        // console.log(all[1].data);
-        // console.log('↓ /api/interviewers ↓');
-        // console.log(all[2].data);
-        setState((prev) => ({
-          ...prev,
+        dispatch({
+          type: 'SET_APPLICATION_DATA',
           days: all[0].data,
           appointments: all[1].data,
           interviewers: all[2].data,
-        }));
+        });
       })
       .catch((err) => err.message);
   }, []);
 
+  // Update spots remaining in the DayList
   const updateSpots = (state, appointments) => {
     const currentDayIndex = state.days.findIndex(
       (day) => day.name === state.day
@@ -44,56 +69,39 @@ export default function useApplicationData() {
       (appID) => !appointments[appID].interview
     ).length;
 
-    const day = {
-      ...currentDay,
-      spots,
-    };
-
     const days = [...state.days];
-    days[currentDayIndex] = day;
+    days[currentDayIndex] = { ...currentDay, spots };
 
-    return days;
+    dispatch({ type: 'SET_INTERVIEW', appointments, days });
   };
 
-  const bookInterview = (id, interview) => {
-    console.log('bookInterview');
-    console.log(id, interview);
+  // Book, edit or cancel an interview.
+  const editInterview = async (id, interviewData, cancel = false) => {
+    const interview = cancel ? null : { ...interviewData };
 
     const appointment = {
       ...state.appointments[id],
-      interview: { ...interview },
+      interview,
     };
-
     const appointments = {
       ...state.appointments,
       [id]: appointment,
     };
 
-    const days = updateSpots(state, appointments, id);
+    if (cancel) {
+      await axios.delete(`http://localhost:8001/api/appointments/${id}`);
+    }
 
-    return axios
-      .put(`http://localhost:8001/api/appointments/${id}`, appointments[id])
-      .then(() => setState({ ...state, appointments, days }));
+    if (!cancel) {
+      await axios.put(
+        `http://localhost:8001/api/appointments/${id}`,
+        appointments[id]
+      );
+    }
+
+    // Update spots remaining and pass info to be dispatched
+    updateSpots(state, appointments);
   };
 
-  async function cancelInterview(id) {
-    await axios.delete(`http://localhost:8001/api/appointments/${id}`);
-    console.log(`delete interview id: ${id}`);
-
-    const appointment = {
-      ...state.appointments[id],
-      interview: null,
-    };
-
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment,
-    };
-
-    const days = updateSpots(state, appointments, id);
-
-    setState({ ...state, appointments, days });
-  }
-
-  return { state, setDay, bookInterview, cancelInterview };
+  return { state, setDay, editInterview };
 }

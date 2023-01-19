@@ -4,6 +4,12 @@ const SET_INTERVIEW = 'SET_INTERVIEW';
 
 export { SET_DAY, SET_INTERVIEW, SET_APPLICATION_DATA };
 
+/**
+ * Manage state of app data in 'hooks/useApplicationData.js'
+ * @param {object} state  Current state
+ * @param {object} action Includes type of action and additional data to pass
+ * @return {{}}           Updated state of application data
+ */
 export default function reducer(state, action) {
   const { type, day, days, appointments, interviewers } = action;
 

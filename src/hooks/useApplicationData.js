@@ -1,35 +1,11 @@
 import { useEffect, useReducer } from 'react';
 import axios from 'axios';
 
-const reducer = (state, action) => {
-  const { type, day, days, appointments, interviewers } = action;
-
-  switch (type) {
-    case 'SET_DAY':
-      return {
-        ...state,
-        day,
-      };
-
-    case 'SET_APPLICATION_DATA':
-      return {
-        ...state,
-        days,
-        appointments,
-        interviewers,
-      };
-
-    case 'SET_INTERVIEW':
-      return {
-        ...state,
-        appointments,
-        days,
-      };
-
-    default:
-      throw new Error(`Tried to reduce with unsupported action type: ${type}.`);
-  }
-};
+import reducer, {
+  SET_DAY,
+  SET_APPLICATION_DATA,
+  SET_INTERVIEW,
+} from 'reducers/application';
 
 export default function useApplicationData() {
   const [state, dispatch] = useReducer(reducer, {
@@ -38,7 +14,7 @@ export default function useApplicationData() {
     appointments: {},
   });
 
-  const setDay = (day) => dispatch({ type: 'SET_DAY', day });
+  const setDay = (day) => dispatch({ type: SET_DAY, day });
 
   // Get all state data from API and dispatch to reducer
   useEffect(() => {
@@ -49,7 +25,7 @@ export default function useApplicationData() {
     ])
       .then((all) => {
         dispatch({
-          type: 'SET_APPLICATION_DATA',
+          type: SET_APPLICATION_DATA,
           days: all[0].data,
           appointments: all[1].data,
           interviewers: all[2].data,
@@ -72,7 +48,7 @@ export default function useApplicationData() {
     const days = [...state.days];
     days[currentDayIndex] = { ...currentDay, spots };
 
-    dispatch({ type: 'SET_INTERVIEW', appointments, days });
+    dispatch({ type: SET_INTERVIEW, appointments, days });
   };
 
   // Book, edit or cancel an interview.

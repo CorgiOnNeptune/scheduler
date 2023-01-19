@@ -13,8 +13,6 @@ import useApplicationData from 'hooks/useApplicationData';
 export default function Application() {
   const { state, setDay, editInterview } = useApplicationData();
 
-  const dailyInterviewers = getInterviewersForDay(state, state.day);
-
   const appointmentItems = getAppointmentsForDay(state, state.day).map(
     (appointment) => {
       return (
@@ -23,7 +21,7 @@ export default function Application() {
           id={appointment.id}
           time={appointment.time}
           interview={getInterview(state, appointment.interview)}
-          interviewers={dailyInterviewers}
+          interviewers={getInterviewersForDay(state, state.day)}
           editInterview={editInterview}
         />
       );

@@ -1,3 +1,50 @@
+/**
+ * Mock axios function for testing with Jest. Uses static fixture data
+ * @param {string}       url url to retrieve mock data from
+ * @return {Promise<{}>}     object with mock data
+ */
+export default {
+  get: jest.fn((url) => {
+    if (url === 'http://localhost:8001/api/days') {
+      return Promise.resolve({
+        status: 200,
+        statusText: 'OK',
+        data: fixtures.days,
+      });
+    }
+
+    if (url === 'http://localhost:8001/api/appointments') {
+      return Promise.resolve({
+        status: 200,
+        statusText: 'OK',
+        data: fixtures.appointments,
+      });
+    }
+
+    if (url === 'http://localhost:8001/api/interviewers') {
+      return Promise.resolve({
+        status: 200,
+        statusText: 'OK',
+        data: fixtures.interviewers,
+      });
+    }
+  }),
+
+  put: jest.fn((url) => {
+    return Promise.resolve({
+      status: 200,
+      statusText: 'No Content',
+    });
+  }),
+
+  delete: jest.fn((url) => {
+    return Promise.resolve({
+      status: 200,
+      statusText: 'No Content',
+    });
+  }),
+};
+
 const fixtures = {
   days: [
     {
@@ -51,46 +98,4 @@ const fixtures = {
       avatar: 'https://i.imgur.com/FK8V841.jpg',
     },
   },
-};
-
-export default {
-  get: jest.fn((url) => {
-    if (url === 'http://localhost:8001/api/days') {
-      return Promise.resolve({
-        status: 200,
-        statusText: 'OK',
-        data: fixtures.days,
-      });
-    }
-
-    if (url === 'http://localhost:8001/api/appointments') {
-      return Promise.resolve({
-        status: 200,
-        statusText: 'OK',
-        data: fixtures.appointments,
-      });
-    }
-
-    if (url === 'http://localhost:8001/api/interviewers') {
-      return Promise.resolve({
-        status: 200,
-        statusText: 'OK',
-        data: fixtures.interviewers,
-      });
-    }
-  }),
-
-  put: jest.fn((url) => {
-    return Promise.resolve({
-      status: 200,
-      statusText: 'No Content',
-    });
-  }),
-
-  delete: jest.fn((url) => {
-    return Promise.resolve({
-      status: 200,
-      statusText: 'No Content',
-    });
-  }),
 };

@@ -6,9 +6,9 @@ Interviews states are managed and updated, with user-facing error checks to acco
 
 Multiple [testing libraries](#test-libraries) were used to meet all needs for unit, integration, and end-to-end tests.
 
-&nbsp;
-
 ---
+
+&nbsp;
 
 ## Getting Started
 
@@ -37,9 +37,9 @@ npm run storybook
 npm run cypress
 ```
 
----
-
 &nbsp;
+
+---
 
 ## Final Product
 
@@ -47,29 +47,49 @@ npm run cypress
 
 ![default page view](https://github.com/CorgiOnNeptune/scheduler/blob/master/docs/main-view.png?raw=true)
 
-### Creating / Deleting Appointments
+### GIFs of Editing Appointments
+
+<details>
+<summary>Creating Appointment</summary>
 
 ![create appointment](https://github.com/CorgiOnNeptune/scheduler/blob/master/docs/create-appointment.gif?raw=true)
 
+</details>
+
+<details>
+<summary>Cancelling Appointment</summary>
+
 ![delete appointment](https://github.com/CorgiOnNeptune/scheduler/blob/master/docs/delete-appointment.gif?raw=true)
 
-### Navigate Day List
+</details>
+
+<details>
+<summary>Navigating Day List Sidebar</summary>
 
 ![navigate through days](https://github.com/CorgiOnNeptune/scheduler/blob/master/docs/navigation.gif?raw=true)
 
-### Form Validation
+</details>
+&nbsp;
+
+### Server-Side Error & Form Validation
+
+<details>
+<summary>Server-Side Error</summary>
+
+![Server-side error](https://github.com/CorgiOnNeptune/scheduler/blob/master/docs/server-error.png?raw=true)
+
+</details>
+
+<details>
+<summary>Form Validation</summary>
 
 ![form validation](https://github.com/CorgiOnNeptune/scheduler/blob/master/docs/form-validation.png?raw=true)
 
-### Server-Side Error
-
-![Server-side error](https://github.com/CorgiOnNeptune/scheduler/blob/master/docs/server-error.png?raw=true)
+</details>
 
 &nbsp;
 
 ---
-
-&nbsp;
 
 ## Dependencies
 

@@ -40,7 +40,7 @@ export default function useApplicationData() {
 
   const setDay = (day) => dispatch({ type: 'SET_DAY', day });
 
-  // Get days data from API and set the days state
+  // Get all state data from API and dispatch to reducer
   useEffect(() => {
     Promise.all([
       axios.get('http://localhost:8001/api/days'),
@@ -72,12 +72,12 @@ export default function useApplicationData() {
     const days = [...state.days];
     days[currentDayIndex] = { ...currentDay, spots };
 
-    return days;
+    dispatch({ type: 'SET_INTERVIEW', appointments, days });
   };
 
   // Book, edit or cancel an interview.
-  const editInterview = async (id, interviewInfo, cancel = false) => {
-    const interview = cancel ? null : { ...interviewInfo };
+  const editInterview = async (id, interviewData, cancel = false) => {
+    const interview = cancel ? null : { ...interviewData };
 
     const appointment = {
       ...state.appointments[id],
@@ -99,8 +99,8 @@ export default function useApplicationData() {
       );
     }
 
-    const days = updateSpots(state, appointments, id);
-    dispatch({ type: 'SET_INTERVIEW', id, appointments, days });
+    // Update spots remaining and pass info to be dispatched
+    updateSpots(state, appointments);
   };
 
   return { state, setDay, editInterview };

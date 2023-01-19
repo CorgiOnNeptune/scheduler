@@ -1,10 +1,10 @@
 import { useEffect, useReducer } from 'react';
 import axios from 'axios';
 
-function reducer(state, action) {
-  const { day, days, appointments, interviewers } = action;
+const reducer = (state, action) => {
+  const { type, day, days, appointments, interviewers } = action;
 
-  switch (action.type) {
+  switch (type) {
     case 'SET_DAY':
       return {
         ...state,
@@ -27,11 +27,9 @@ function reducer(state, action) {
       };
 
     default:
-      throw new Error(
-        `Tried to reduce with unsupported action type: ${action.type}.`
-      );
+      throw new Error(`Tried to reduce with unsupported action type: ${type}.`);
   }
-}
+};
 
 export default function useApplicationData() {
   const [state, dispatch] = useReducer(reducer, {
@@ -60,6 +58,7 @@ export default function useApplicationData() {
       .catch((err) => err.message);
   }, []);
 
+  // Update spots remaining in the DayList
   const updateSpots = (state, appointments) => {
     const currentDayIndex = state.days.findIndex(
       (day) => day.name === state.day
@@ -76,45 +75,33 @@ export default function useApplicationData() {
     return days;
   };
 
-  const bookInterview = (id, interview) => {
-    console.log('bookInterview');
-    console.log(id, interview);
+  // Book, edit or cancel an interview.
+  const editInterview = async (id, interviewInfo, cancel = false) => {
+    const interview = cancel ? null : { ...interviewInfo };
 
     const appointment = {
       ...state.appointments[id],
-      interview: { ...interview },
+      interview,
     };
-
     const appointments = {
       ...state.appointments,
       [id]: appointment,
     };
 
-    const days = updateSpots(state, appointments, id);
+    if (cancel) {
+      await axios.delete(`http://localhost:8001/api/appointments/${id}`);
+    }
 
-    return axios
-      .put(`http://localhost:8001/api/appointments/${id}`, appointments[id])
-      .then(() => dispatch({ type: 'SET_INTERVIEW', id, appointments, days }));
+    if (!cancel) {
+      await axios.put(
+        `http://localhost:8001/api/appointments/${id}`,
+        appointments[id]
+      );
+    }
+
+    const days = updateSpots(state, appointments, id);
+    dispatch({ type: 'SET_INTERVIEW', id, appointments, days });
   };
 
-  async function cancelInterview(id) {
-    await axios.delete(`http://localhost:8001/api/appointments/${id}`);
-    console.log(`delete interview id: ${id}`);
-
-    const appointment = {
-      ...state.appointments[id],
-      interview: null,
-    };
-
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment,
-    };
-
-    const days = updateSpots(state, appointments, id);
-
-    dispatch({ type: 'SET_INTERVIEW', id, appointments, days });
-  }
-
-  return { state, setDay, bookInterview, cancelInterview };
+  return { state, setDay, editInterview };
 }

@@ -11,8 +11,7 @@ import {
 import useApplicationData from 'hooks/useApplicationData';
 
 export default function Application() {
-  const { state, setDay, bookInterview, cancelInterview } =
-    useApplicationData();
+  const { state, setDay, editInterview } = useApplicationData();
 
   const dailyInterviewers = getInterviewersForDay(state, state.day);
 
@@ -25,8 +24,7 @@ export default function Application() {
           time={appointment.time}
           interview={getInterview(state, appointment.interview)}
           interviewers={dailyInterviewers}
-          bookInterview={bookInterview}
-          cancelInterview={cancelInterview}
+          editInterview={editInterview}
         />
       );
     }

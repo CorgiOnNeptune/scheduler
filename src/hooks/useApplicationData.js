@@ -24,9 +24,9 @@ export default function useApplicationData() {
   // Get all state data from API and dispatch to reducer
   useEffect(() => {
     Promise.all([
-      axios.get('http://localhost:8001/api/days'),
-      axios.get('http://localhost:8001/api/appointments'),
-      axios.get('http://localhost:8001/api/interviewers'),
+      axios.get('/api/days'),
+      axios.get('/api/appointments'),
+      axios.get('/api/interviewers'),
     ])
       .then((all) => {
         dispatch({
@@ -81,12 +81,12 @@ export default function useApplicationData() {
     };
 
     if (cancel) {
-      await axios.delete(`http://localhost:8001/api/appointments/${id}`);
+      await axios.delete(`/api/appointments/${id}`);
     }
 
     if (!cancel) {
       await axios.put(
-        `http://localhost:8001/api/appointments/${id}`,
+        `/api/appointments/${id}`,
         appointments[id]
       );
     }
